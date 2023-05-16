@@ -11,6 +11,7 @@ print("Adding signature")
 archive.write(bytes("protato", encoding))
 archive.write(bytes(4))
 archCompress = archivebuild.buildArchiveObject(archivename, archive.tell(), input("Archive folder-> "))
+print("Operation Completed")
 archive.close()
 
 #print("writing archive info object @ "+hex(archive.tell()))
