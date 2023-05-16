@@ -1,6 +1,6 @@
-header
-7 bytes| signature | 70 72 6F 74 61 74 6F
-4 bytes| padding
+header\
+7 bytes| signature | 70 72 6F 74 61 74 6F\
+4 bytes| padding\
 
 archive info
 4 bytes| file count
