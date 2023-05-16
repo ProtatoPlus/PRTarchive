@@ -12,6 +12,7 @@ archive info\
 4 bytes| offset to first file
 
 file format\
+4 bytes| file name\
 4 bytes| file size\
 4 bytes| next file offset\
 ANY bytes| file (lz4)

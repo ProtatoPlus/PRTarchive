@@ -21,7 +21,7 @@ def buildArchiveObject(archname, curpos, archivefolder):
             print("Compressing: " + filename)
             ucdat = lz4.frame.compress(fdat)
 
-            files[f] = {"size": fstat.st_size, "data": ucdat}
+            files[f] = {"name": filename, "size": fstat.st_size, "data": ucdat}
             totalsize += fstat.st_size
     archinfo = {"metadata": {"amt": len(files), "size": totalsize}, "data": files}
     print("Archive data built")
@@ -32,9 +32,10 @@ def buildArchiveObject(archname, curpos, archivefolder):
     archive.write(archinfo['metadata']['size'].to_bytes(4, byteorder = 'big'))
     archive.write(bytes(1))
     archive.write((archive.tell() + 50).to_bytes(4, byteorder = 'big'))
-    archive.seek(archive.tell() + 50)
+    archive.seek(archive.tell() + 50 - 4)
     for fdat in archinfo['data']:
         archparent = archinfo['data'][fdat]
+        archive.write(bytes(archparent['name'], 'utf-8'))
         archive.write(archparent['size'].to_bytes(4, byteorder = 'big'))
         archive.write((archive.tell() + 4 + archparent['size']).to_bytes(4, byteorder = 'big'))
         archive.write(archparent['data'])
