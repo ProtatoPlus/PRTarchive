@@ -48,5 +48,5 @@ def buildArchiveObject(archname, curpos, archivefolder):
         endloc = archive.tell()
         archive.seek(cacheloc)
         archive.write(endloc.to_bytes(4, 'big'))
-        print(endloc)
         archive.seek(endloc)
+        print("Wrote file: "+archparent['name']+" to archive")
