@@ -4,13 +4,20 @@ import lz4.frame
 import codecs
 import base64
 
+from cryptography.fernet import Fernet
+
 files = {}
 totalsize = 0
 
-def buildArchiveObject(archname, curpos, archivefolder):
+def buildArchiveObject(archname, curpos, archivefolder, b64enckey):
     global files
     global totalsize
     totalsize = 0
+    if (b64enckey != None):
+        crypto = True
+    else:
+        crypto = False
+
     print("Getting archive files")
     for filename in os.listdir(archivefolder):
         f = os.path.join(archivefolder, filename)
@@ -25,7 +32,14 @@ def buildArchiveObject(archname, curpos, archivefolder):
 
             base64_bytes = base64.b64encode(ucdat)
 
-            files[f] = {"fnamelen": len(filename),"name": filename, "size": len(base64_bytes), "data": base64_bytes}
+            if (crypto):
+                fernet = Fernet(b64enckey)
+                print("Encrypting "+filename)
+                finalBytes = fernet.encrypt(base64_bytes)
+            else:
+                finalBytes = base64_bytes
+
+            files[f] = {"fnamelen": len(filename),"name": filename, "size": len(finalBytes), "data": finalBytes}
             totalsize += fstat.st_size
     archinfo = {"metadata": {"amt": len(files), "size": totalsize}, "data": files}
     print("Archive data built")

@@ -3,11 +3,19 @@ import binascii
 import lz4.frame
 import base64
 
+from cryptography.fernet import Fernet
+
 nfileoffset = 0
 archpath = input("Path to archive: ")
 archive = open(archpath, "rb")
 fstat = os.stat(archpath)
 outfolder = input("Output folder: ")
+if (input("Encryption (y/n) ") == "y"):
+    crypto = True
+    key = base64.b64encode(input('Key-> ').encode('ascii'))
+    fernet = Fernet(key)
+else:
+    crypto = False
 
 if os.path.exists(outfolder) != True:
     print("Output folder does not exist!")
@@ -50,8 +58,9 @@ else:
         f = open(os.path.join(outfolder + fname), 'x')
         f.close()
         outfile = open(os.path.join(outfolder + fname), 'r+b')
+        if (crypto):
+            outputdat = fernet.decrypt(outputdat)
         b64_dec = base64.b64decode(outputdat)
-        #outdecomp = lz4.frame.decompress(bytes(b64_dec, 'utf-8'))
         outfile.write(b64_dec)
         outfile.close()
 
