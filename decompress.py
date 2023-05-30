@@ -2,6 +2,7 @@ import os
 import binascii
 import lz4.frame
 import base64
+import keygen
 
 from cryptography.fernet import Fernet
 
@@ -12,7 +13,7 @@ fstat = os.stat(archpath)
 outfolder = input("Output folder: ")
 if (input("Encryption (y/n) ") == "y"):
     crypto = True
-    key = base64.b64encode(input('Key-> ').encode('ascii'))
+    key = base64.b64encode(keygen.getKeyFromStr(input('Key-> ')).encode('ascii'))
     fernet = Fernet(key)
 else:
     crypto = False

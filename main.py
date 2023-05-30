@@ -1,5 +1,6 @@
 import archivebuild
 import base64
+import keygen
 
 print("Protato archive tool")
 archivename = input("name of archive: ") + ".prt"
@@ -12,7 +13,9 @@ print("Adding signature")
 archive.write(bytes("protato", encoding))
 archive.write(bytes(4))
 if (input("Encryption (y/n) ") == "y"):
-    key = base64.b64encode(input('Key-> ').encode('ascii'))
+    keyder = keygen.getKeyFromStr(input('Key-> '))
+    print("Your private key is: " + keyder)
+    key = base64.b64encode(keyder.encode('ascii'))
 else:
     key = None
 archCompress = archivebuild.buildArchiveObject(archivename, archive.tell(), input("Archive folder-> "), key)
